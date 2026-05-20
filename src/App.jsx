@@ -2,8 +2,9 @@
 import {useState,useEffect,useRef} from "react"
 import {computeSliderCrank} from "./physics/sliderCrankModel"
 import ControlPanel from "./components/ControlPanel"
+import SimulationControls from "./components/SimulationControl"
 import MechanismView from "./components/MechanismView"
-import GraphPanel from "./components/GraphPanel"
+import Graph3Panel from "./chart/Graph3Panel"
 import TheoryPanel from "./components/TheoryPanel"
 
 export default function App(){
@@ -41,6 +42,24 @@ setHistory(h=>[...h.slice(-200),{vC:state.vC}])
 
 },[theta])
 
+// Simulation Control
+function play(){
+setIsPlaying(true)
+}
+
+function pause(){
+setIsPlaying(false)
+}
+
+function step(){
+setTheta(prev => prev + omega * 0.05)
+}
+
+function reset(){
+setTheta(0)
+setHistory([])
+}
+  
 return(
 
 <div>
@@ -58,6 +77,14 @@ setL={setL}
 setOmega={setOmega}
 />
 
+<SimulationControls
+play={play}
+pause={pause}
+step={step}
+reset={reset}
+isPlaying={isPlaying}
+/>
+
 <MechanismView
 state={state}
 r={r}
@@ -66,7 +93,7 @@ l={l}
 
 <div>
 
-<GraphPanel history={history}/>
+<Graph3Panel history={history}/>
 
 <TheoryPanel/>
 
