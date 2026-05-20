@@ -15,7 +15,7 @@ const [omega,setOmega]=useState(2)
 
 const [theta,setTheta]=useState(0)
 const [history,setHistory]=useState([])
-
+const [isPlaying, setIsPlaying] = useState(true)
 const ref=useRef()
 
 useEffect(()=>{
