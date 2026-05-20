@@ -33,3 +33,18 @@ input[type=range]{
   width:100%;
   margin-bottom:14px;
 }
+
+.layout{
+display:grid;
+grid-template-columns:300px 1fr 420px;
+gap:20px;
+padding:20px;
+}
+
+.panel{
+background:#131a2e;
+padding:15px;
+border-radius:8px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+margin-bottom:15px;
+}
