@@ -1,48 +1,89 @@
+import { useState, useEffect, useRef } from "react"
 
-import {useState,useEffect,useRef} from "react"
-import {computeSliderCrank} from "./physics/sliderCrankModel"
+import { computeSliderCrank } from "./physics/sliderCrankModel"
+
 import ControlPanel from "./components/ControlPanel"
 import SimulationControls from "./components/SimulationControl"
 import MechanismView from "./components/MechanismView"
 import Graph3Panel from "./chart/Graph3Panel"
+import VectorDiagram from "./components/VectorDiagram"
+import ValidationPanel from "./components/ValidationPanel"
 import TheoryPanel from "./components/TheoryPanel"
 
-export default function App(){
+export default function App() {
 
-const [r,setR]=useState(1)
-const [l,setL]=useState(2.5)
-const [omega,setOmega]=useState(2)
+const [r, setR] = useState(1)
+const [l, setL] = useState(2.5)
+const [omega, setOmega] = useState(2)
 
-const [theta,setTheta]=useState(0)
-const [history,setHistory]=useState([])
-const [isPlaying, setIsPlaying] = useState(true)
-const ref=useRef()
+const [theta, setTheta] = useState(0)
+const [history, setHistory] = useState([])
 
-useEffect(()=>{
+const [isPlaying, setIsPlaying] = useState(false)
+const [speed, setSpeed] = useState(1)
+
+const ref = useRef(null)
+
+
+// =========================
+// SIMULATION ANIMATION LOOP
+// =========================
+
+useEffect(() => {
 
 function animate(){
 
-setTheta(t=>t+omega*0.016)
+if(isPlaying){
+setTheta(prev => prev + omega * 0.016 * speed)
+}
 
-ref.current=requestAnimationFrame(animate)
+ref.current = requestAnimationFrame(animate)
 
 }
 
-ref.current=requestAnimationFrame(animate)
+ref.current = requestAnimationFrame(animate)
 
-return()=>cancelAnimationFrame(ref.current)
+return () => cancelAnimationFrame(ref.current)
 
-},[omega])
+}, [isPlaying, omega, speed])
 
-const state=computeSliderCrank(r,l,omega,theta)
 
-useEffect(()=>{
 
-setHistory(h=>[...h.slice(-200),{vC:state.vC}])
+// =========================
+// COMPUTE CURRENT STATE
+// =========================
 
-},[theta])
+const state = computeSliderCrank(r, l, omega, theta)
 
-// Simulation Control
+
+
+// =========================
+// STORE HISTORY DATA
+// =========================
+
+useEffect(() => {
+
+setHistory(prev => [
+
+...prev.slice(-300),
+
+{
+t: theta,
+x: state.C.x,
+v: state.vC,
+a: state.aC
+}
+
+])
+
+}, [theta])
+
+
+
+// =========================
+// SIMULATION CONTROLS
+// =========================
+
 function play(){
 setIsPlaying(true)
 }
@@ -59,14 +100,28 @@ function reset(){
 setTheta(0)
 setHistory([])
 }
-  
-return(
+
+
+
+// =========================
+// UI
+// =========================
+
+return (
 
 <div>
 
-<h1 style={{textAlign:"center"}}>Slider Crank Educational Simulator</h1>
+<h1 style={{textAlign:"center"}}>
+Slider Crank Educational Simulator
+</h1>
+
 
 <div className="layout">
+
+
+{/* LEFT PANEL */}
+
+<div>
 
 <ControlPanel
 r={r}
@@ -85,19 +140,43 @@ reset={reset}
 isPlaying={isPlaying}
 />
 
+<VectorDiagram state={state}/>
+
+</div>
+
+
+
+{/* CENTER PANEL */}
+
+<div>
+
 <MechanismView
 state={state}
 r={r}
 l={l}
 />
 
+</div>
+
+
+
+{/* RIGHT PANEL */}
+
 <div>
 
 <Graph3Panel history={history}/>
 
+<ValidationPanel
+r={r}
+l={l}
+omega={omega}
+theta={theta}
+/>
+
 <TheoryPanel/>
 
 </div>
+
 
 </div>
 
