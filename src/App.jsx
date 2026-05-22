@@ -28,11 +28,13 @@ export default function App() {
 
   const state = computeSliderCrank(r, l, omega, theta)
 
+  const tNorm = ((theta % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)
+
   useEffect(() => {
     setHistory(prev => [
       ...prev.slice(-300),
       {
-        t:        theta,
+        t:        tNorm,
         x:        state.C.x,
         v:        state.vC,
         a:        state.aC,
