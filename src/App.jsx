@@ -69,6 +69,7 @@ export default function App() {
 
         <div>
           <MechanismView state={state} r={r} l={l} />
+          <ValidationPanel r={r} l={l} omega={omega} theta={theta} />
         </div>
 
         <div>
@@ -77,9 +78,7 @@ export default function App() {
       </div>
 
       <div className="bottom-row">
-        <div className="panel panel-wide">
-          <ValidationPanel r={r} l={l} omega={omega} theta={theta} />
-        </div>
+
         <div className="panel panel-wide">
           <TheoryPanel />
         </div>
