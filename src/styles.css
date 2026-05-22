@@ -12,16 +12,12 @@ body {
   padding: 0 16px 16px;
 }
 
-/* ── Bottom row: dua panel 16:9 berdampingan ── */
+
 .bottom-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
   padding: 0 16px 24px;
 }
 
 .panel-wide {
-  /* rasio 16:9 — tinggi mengikuti lebar */
   aspect-ratio: 16 / 9;
   overflow-y: auto;
 }
