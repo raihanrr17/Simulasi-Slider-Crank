@@ -1,50 +1,51 @@
-
-body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:#0b0f1c;
-  color:white;
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #0b0f1c;
+  color: white;
 }
 
-.layout{
-  display:grid;
-  grid-template-columns:260px 1fr 320px;
-  gap:16px;
-  padding:16px;
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 380px;
+  gap: 16px;
+  padding: 0 16px 16px;
 }
 
-.panel{
-  background:#131a2e;
-  border:1px solid #253055;
-  padding:16px;
-  border-radius:8px;
+/* ── Bottom row: dua panel 16:9 berdampingan ── */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 0 16px 24px;
 }
 
-h2{
-  margin-top:0;
+.panel-wide {
+  /* rasio 16:9 — tinggi mengikuti lebar */
+  aspect-ratio: 16 / 9;
+  overflow-y: auto;
 }
 
-canvas{
-  background:#0e1324;
-  border-radius:8px;
+/* ── Panel umum ── */
+.panel {
+  background: #131a2e;
+  border: 1px solid #253055;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-input[type=range]{
-  width:100%;
-  margin-bottom:14px;
+h2 {
+  margin-top: 0;
 }
 
-.layout{
-display:grid;
-grid-template-columns:300px 1fr 420px;
-gap:20px;
-padding:20px;
+canvas {
+  background: #0e1324;
+  border-radius: 8px;
 }
 
-.panel{
-background:#131a2e;
-padding:15px;
-border-radius:8px;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
-margin-bottom:15px;
+input[type=range] {
+  width: 100%;
+  margin-bottom: 14px;
 }
