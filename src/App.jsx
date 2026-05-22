@@ -4,7 +4,6 @@ import ControlPanel from "./components/ControlPanel"
 import SimulationControls from "./components/SimulationControl"
 import MechanismView from "./components/MechanismView"
 import Graph3Panel from "./chart/Graph3Panel"
-import VectorDiagram from "./components/VectorDiagram"
 import ValidationPanel from "./components/ValidationPanel"
 import TheoryPanel from "./components/TheoryPanel"
 
@@ -59,7 +58,6 @@ export default function App() {
 
         <div>
           <MechanismView state={state} r={r} l={l} />
-          <VectorDiagram state={state} />
           <ValidationPanel r={r} l={l} omega={omega} theta={theta} />
         </div>
 
