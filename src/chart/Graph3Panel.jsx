@@ -24,43 +24,22 @@ ChartJS.register(
 ChartJS.defaults.elements.point.radius = 0
 ChartJS.defaults.elements.point.hoverRadius = 3
 
-export default function Graph3Panel({ history }) {
-  const data = useMemo(() => ({
-    labels: history.map(h => h.t.toFixed(2)),
+function SingleChart({ label, data, labels, borderColor, yLabel }) {
+  const chartData = useMemo(() => ({
+    labels,
     datasets: [
       {
-        label: "Position x(t)",
-        data: history.map(h => h.x),
-        borderColor: "#4bc0c0",
+        label,
+        data,
+        borderColor,
         backgroundColor: "transparent",
         tension: 0.3,
         pointRadius: 0,
         pointHoverRadius: 3,
         borderWidth: 2,
-      },
-      {
-        label: "Velocity v(t)",
-        data: history.map(h => h.v),
-        borderColor: "#ff6384",
-        backgroundColor: "transparent",
-        tension: 0.3,
-        pointRadius: 0,
-        pointHoverRadius: 3,
-        borderWidth: 2,
-      },
-      {
-        label: "Acceleration a(t)",
-        data: history.map(h => h.a),
-        borderColor: "#ffcd56",
-        backgroundColor: "transparent",
-        tension: 0.3,
-        pointRadius: 0,
-        pointHoverRadius: 3,
-        borderWidth: 2,
-        yAxisID: "y2",
       }
     ]
-  }), [history])
+  }), [label, data, labels, borderColor])
 
   const options = {
     responsive: true,
@@ -71,38 +50,64 @@ export default function Graph3Panel({ history }) {
     },
     plugins: {
       legend: {
-        position: "top",
-        labels: { color: "#ccc" }
+        display: false,
       }
     },
     scales: {
       x: {
         ticks: {
-          maxTicksLimit: 10,
+          maxTicksLimit: 8,
           color: "#aaa",
         },
         title: { display: true, text: "Time (s)", color: "#aaa" }
       },
       y: {
-        type: "linear",
-        position: "left",
-        title: { display: true, text: "x  /  v", color: "#aaa" },
+        title: { display: true, text: yLabel, color: borderColor },
         ticks: { color: "#aaa" },
-      },
-      y2: {
-        type: "linear",
-        position: "right",
-        title: { display: true, text: "a", color: "#ffcd56" },
-        ticks: { color: "#ffcd56" },
-        grid: { drawOnChartArea: false },
       }
     }
   }
 
   return (
+    <div style={{ marginBottom: "12px" }}>
+      <p style={{ margin: "0 0 4px 0", color: borderColor, fontWeight: "bold", fontSize: "0.85rem" }}>
+        {label}
+      </p>
+      <Line data={chartData} options={options} />
+    </div>
+  )
+}
+
+export default function Graph3Panel({ history }) {
+  const labels = useMemo(() => history.map(h => h.t.toFixed(2)), [history])
+  const xData  = useMemo(() => history.map(h => h.x), [history])
+  const vData  = useMemo(() => history.map(h => h.v), [history])
+  const aData  = useMemo(() => history.map(h => h.a), [history])
+
+  return (
     <div className="panel">
       <h2>Graphs (x, v, a)</h2>
-      <Line key="sliderGraph" data={data} options={options} />
+      <SingleChart
+        label="Position x(t)"
+        data={xData}
+        labels={labels}
+        borderColor="#4bc0c0"
+        yLabel="x (m)"
+      />
+      <SingleChart
+        label="Velocity v(t)"
+        data={vData}
+        labels={labels}
+        borderColor="#ff6384"
+        yLabel="v (m/s)"
+      />
+      <SingleChart
+        label="Acceleration a(t)"
+        data={aData}
+        labels={labels}
+        borderColor="#ffcd56"
+        yLabel="a (m/s²)"
+      />
     </div>
   )
 }
