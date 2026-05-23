@@ -1,37 +1,61 @@
 export default function ValidationPanel({ r, l, omega, theta }) {
-  const tNorm   = ((theta ?? 0) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI)
-  const safeR   = r   ?? 0
-  const safeL   = l   ?? 0
-  const safeO   = omega ?? 0
-  const lambda  = safeR / safeL
+  const tNorm  = ((theta ?? 0) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI)
+  const safeR  = r     ?? 0
+  const safeL  = l     ?? 0
+  const safeO  = omega ?? 0
+  const lambda = safeR / safeL
 
-  const sinT    = Math.sin(tNorm)
-  const cosT    = Math.cos(tNorm)
-  const sinPhi  = (safeR / safeL) * sinT
-  const cosPhi  = Math.sqrt(Math.max(0, 1 - sinPhi ** 2))
+  const sinT     = Math.sin(tNorm)
+  const cosT     = Math.cos(tNorm)
+  const sinPhi   = (safeR / safeL) * sinT
+  const cosPhi   = Math.sqrt(Math.max(0, 1 - sinPhi ** 2))
   const omegaRod = (safeR * safeO * cosT) / (safeL * cosPhi || 1)
-  const vC      = -safeR * safeO * sinT - safeL * omegaRod * sinPhi
+  const vC       = -safeR * safeO * sinT - safeL * omegaRod * sinPhi
 
   const xExpr = `${safeR} · cos(${tNorm.toFixed(2)}) + √(${safeL}² − ${safeR}² · sin²(${tNorm.toFixed(2)}))`
 
-  // ── Anotasi ──
-  const notes = []
-
-  if (lambda < 0.1)
-    notes.push({ color: "#4bc0c0", icon: "✅", text: `λ = ${lambda.toFixed(2)} — gerak slider ≈ harmonik sederhana (rod sangat panjang)` })
-  else if (lambda <= 0.5)
-    notes.push({ color: "#ffcd56", icon: "⚠️", text: `λ = ${lambda.toFixed(2)} — distorsi harmonik mulai signifikan, analisis penuh diperlukan` })
-  else
-    notes.push({ color: "#ff6384", icon: "🔴", text: `λ = ${lambda.toFixed(2)} — distorsi besar, aproksimasi harmonik tidak valid` })
-
-  if (Math.abs(vC) < 0.05)
-    notes.push({ color: "#ffcd56", icon: "⬤", text: `vC ≈ 0 — slider berada di titik mati (dead center), perubahan arah gerak` })
-
-  if (Math.abs(tNorm - 0) < 0.05 || Math.abs(tNorm - Math.PI) < 0.05)
-    notes.push({ color: "#a3e635", icon: "📌", text: `θ ≈ ${Math.round(tNorm * 180 / Math.PI)}° — crank segaris dengan rod (posisi singular)` })
-
-  if (Math.abs(omegaRod) > Math.abs(safeO) * 1.5)
-    notes.push({ color: "#f0abfc", icon: "⚡", text: `ωrod = ${omegaRod.toFixed(2)} rad/s — kecepatan sudut rod jauh melebihi crank` })
+  // ── Definisi semua anotasi: kondisi aktif atau tidak ──
+  const annotations = [
+    {
+      icon: "λ",
+      label: "Rasio Geometri",
+      desc: "Aktif saat λ > 0.5 — distorsi besar, aproksimasi harmonik tidak valid",
+      activeDesc:
+        lambda > 0.5
+          ? `λ = ${lambda.toFixed(2)} — distorsi besar, aproksimasi harmonik tidak valid`
+          : lambda > 0.1
+          ? `λ = ${lambda.toFixed(2)} — distorsi harmonik mulai signifikan`
+          : `λ = ${lambda.toFixed(2)} — gerak slider ≈ harmonik sederhana`,
+      active: true, // selalu tampil, hanya warna yang berubah
+      color:
+        lambda > 0.5 ? "#ff6384" :
+        lambda > 0.1 ? "#ffcd56" : "#4bc0c0",
+    },
+    {
+      icon: "⬤",
+      label: "Dead Center",
+      desc: "Aktif saat vC ≈ 0 — slider berbalik arah gerak",
+      activeDesc: `vC = ${vC.toFixed(3)} m/s — slider di titik mati, berbalik arah`,
+      active: Math.abs(vC) < 0.05,
+      color: "#ffcd56",
+    },
+    {
+      icon: "📌",
+      label: "Posisi Singular",
+      desc: "Aktif saat θ ≈ 0° atau 180° — crank segaris dengan connecting rod",
+      activeDesc: `θ = ${(tNorm * 180 / Math.PI).toFixed(1)}° — crank segaris dengan rod`,
+      active: Math.abs(tNorm) < 0.08 || Math.abs(tNorm - Math.PI) < 0.08,
+      color: "#a3e635",
+    },
+    {
+      icon: "⚡",
+      label: "ωrod Ekstrem",
+      desc: "Aktif saat ωrod > 1.5× ω — rod berputar jauh lebih cepat dari crank",
+      activeDesc: `ωrod = ${omegaRod.toFixed(2)} rad/s — jauh melebihi ω crank (${safeO} rad/s)`,
+      active: Math.abs(omegaRod) > Math.abs(safeO) * 1.5,
+      color: "#f0abfc",
+    },
+  ]
 
   return (
     <div className="panel" style={{ marginTop: 12 }}>
@@ -41,7 +65,7 @@ export default function ValidationPanel({ r, l, omega, theta }) {
         x(θ) = {xExpr}
       </p>
 
-      <div style={{ display: "flex", gap: 24, fontSize: "0.83rem", color: "#aaa", marginBottom: 12, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 24, fontSize: "0.83rem", color: "#aaa", marginBottom: 14, flexWrap: "wrap" }}>
         <span>r = <strong style={{ color: "#fff" }}>{safeR} m</strong></span>
         <span>l = <strong style={{ color: "#fff" }}>{safeL} m</strong></span>
         <span>ω = <strong style={{ color: "#fff" }}>{safeO} rad/s</strong></span>
@@ -49,17 +73,31 @@ export default function ValidationPanel({ r, l, omega, theta }) {
         <span>λ = <strong style={{ color: "#fff" }}>{lambda.toFixed(3)}</strong></span>
       </div>
 
-      {/* Anotasi */}
+      {/* Anotasi — selalu tampil, warna berubah sesuai kondisi */}
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        {notes.map((n, i) => (
-          <div key={i} style={{
-            padding: "6px 10px", borderRadius: 6, fontSize: "0.8rem",
-            background: n.color + "18", border: `1px solid ${n.color}55`,
-            color: n.color,
-          }}>
-            {n.icon} {n.text}
-          </div>
-        ))}
+        {annotations.map((n, i) => {
+          const color  = n.active ? n.color : "#4a5568"
+          const border = n.active ? `${n.color}55` : "#2d3748"
+          const bg     = n.active ? `${n.color}18` : "rgba(255,255,255,0.03)"
+          return (
+            <div key={i} style={{
+              padding: "7px 10px", borderRadius: 6,
+              background: bg, border: `1px solid ${border}`,
+              display: "flex", gap: 10, alignItems: "flex-start",
+              transition: "all 0.3s",
+            }}>
+              <span style={{ color, fontSize: "0.85rem", minWidth: 18, marginTop: 1 }}>{n.icon}</span>
+              <div>
+                <div style={{ fontSize: "0.78rem", fontWeight: "bold", color, marginBottom: 1 }}>
+                  {n.label}
+                </div>
+                <div style={{ fontSize: "0.75rem", color: n.active ? color : "#4a5568" }}>
+                  {n.active ? n.activeDesc : n.desc}
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
