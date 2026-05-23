@@ -48,6 +48,8 @@ export default function GuideModal({ onClose }) {
           ))}
         </div>
 
+        {/* Scrollable content area */}
+        <div style={{ overflowY: "auto", flex: 1, paddingRight: 4 }}>
         {/* Tab 0 — Referensi Panel */}
         {tab === 0 && (
           <>
@@ -171,7 +173,8 @@ export default function GuideModal({ onClose }) {
           </>
         )}
 
-        <p style={{ marginTop: 20, fontSize: "0.75rem", color: "#3a4a6a", textAlign: "center" }}>
+        </div>
+        <p style={{ marginTop: 12, fontSize: "0.75rem", color: "#3a4a6a", textAlign: "center", flexShrink: 0 }}>
           Klik di luar panel atau × untuk menutup
         </p>
       </div>
