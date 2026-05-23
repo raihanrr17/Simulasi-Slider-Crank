@@ -67,6 +67,7 @@ export default function App() {
   function pause() { setIsPlaying(false) }
   function step()  { setTheta(prev => prev + omega * 0.05) }
   function reset() { setTheta(0); thetaRef.current = 0; setHistory([]) }
+  function setThetaManual(val) { thetaRef.current = val; setTheta(val) }
 
   return (
     <div>
@@ -80,7 +81,7 @@ export default function App() {
           />
           <SimulationControls
             play={play} pause={pause} step={step} reset={reset}
-            isPlaying={isPlaying}
+            isPlaying={isPlaying} theta={theta} setTheta={setThetaManual}
           />
         </div>
 
