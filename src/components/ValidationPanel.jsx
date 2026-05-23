@@ -47,14 +47,6 @@ export default function ValidationPanel({ r, l, omega, theta }) {
       active: Math.abs(tNorm) < 0.08 || Math.abs(tNorm - Math.PI) < 0.08,
       color: "#a3e635",
     },
-    {
-      icon: "⚡",
-      label: "ωrod Ekstrem",
-      desc: "Aktif saat ωrod > 1.5× ω — rod berputar jauh lebih cepat dari crank",
-      activeDesc: `ωrod = ${omegaRod.toFixed(2)} rad/s — jauh melebihi ω crank (${safeO} rad/s)`,
-      active: Math.abs(omegaRod) > Math.abs(safeO) * 1.5,
-      color: "#f0abfc",
-    },
   ]
 
   return (
