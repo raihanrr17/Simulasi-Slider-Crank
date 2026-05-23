@@ -206,34 +206,38 @@ function Row({ label, desc }) {
 }
 
 function LearningStep({ num, color, title, goal, steps }) {
+  const [open, setOpen] = useState(false)
   return (
-    <div style={{
-      marginBottom: 14, border: `1px solid ${color}33`,
-      borderRadius: 8, overflow: "hidden",
-    }}>
-      <div style={{
-        background: `${color}18`, padding: "10px 14px",
-        borderBottom: `1px solid ${color}22`,
-        display: "flex", alignItems: "center", gap: 10,
-      }}>
+    <div style={{ marginBottom: 8, borderRadius: 8, overflow: "hidden", border: `1px solid ${color}33` }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: "100%", textAlign: "left", background: `${color}18`,
+          border: "none", padding: "10px 14px", cursor: "pointer",
+          display: "flex", alignItems: "center", gap: 10,
+        }}
+      >
         <div style={{
           width: 24, height: 24, borderRadius: "50%",
           background: color, color: "#0b0f1c",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: "0.78rem", fontWeight: "bold", flexShrink: 0,
         }}>{num}</div>
-        <div>
+        <div style={{ flex: 1, textAlign: "left" }}>
           <div style={{ fontSize: "0.88rem", fontWeight: "bold", color: "#fff" }}>{title}</div>
           <div style={{ fontSize: "0.75rem", color, marginTop: 1 }}>Tujuan: {goal}</div>
         </div>
-      </div>
-      <div style={{ padding: "10px 14px" }}>
-        <ol style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 5 }}>
-          {steps.map((s, i) => (
-            <li key={i} style={{ fontSize: "0.8rem", color: "#8a9bb5", lineHeight: 1.55 }}>{s}</li>
-          ))}
-        </ol>
-      </div>
+        <span style={{ color, fontSize: "0.7rem", flexShrink: 0 }}>{open ? "▲" : "▼"}</span>
+      </button>
+      {open && (
+        <div style={{ padding: "10px 14px", borderTop: `1px solid ${color}22` }}>
+          <ol style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 5 }}>
+            {steps.map((s, i) => (
+              <li key={i} style={{ fontSize: "0.8rem", color: "#8a9bb5", lineHeight: 1.55 }}>{s}</li>
+            ))}
+          </ol>
+        </div>
+      )}
     </div>
   )
 }
