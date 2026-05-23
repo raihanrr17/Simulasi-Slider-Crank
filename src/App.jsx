@@ -71,21 +71,24 @@ export default function App() {
 
   return (
     <div style={{ position: "relative" }}>
+      {/* Floating help button */}
+      <button
+        onClick={() => setShowGuide(true)}
+        title="Panduan Penggunaan"
+        style={{
+          position: "fixed", bottom: 24, right: 24, zIndex: 900,
+          width: 40, height: 40, borderRadius: "50%",
+          background: "#1e2d50", border: "1px solid #3a4f7a",
+          color: "#7cb3ff", fontSize: "1.1rem", fontWeight: "bold",
+          cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.5)",
+        }}
+      >?</button>
 
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "16px 16px 0", position: "relative" }}>
+      <div style={{ textAlign: "center", padding: "16px 16px 0" }}>
         <h1 style={{ margin: 0, fontSize: "1.4rem" }}>Slider Crank Educational Simulator</h1>
-        <button
-          onClick={() => setShowGuide(true)}
-          title="Panduan Penggunaan"
-          style={{
-            position: "absolute", right: 16,
-            width: 32, height: 32, borderRadius: "50%",
-            background: "#1e2d50", border: "1px solid #3a4f7a",
-            color: "#7cb3ff", fontSize: "1rem", fontWeight: "bold",
-            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-          }}
-        >?</button>
+
       </div>
 
       {/* Guide modal */}
