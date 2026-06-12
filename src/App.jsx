@@ -12,8 +12,6 @@ export default function App() {
   const [r, setR]         = useState(1)
   const [l, setL]         = useState(2.5)
   const [omega, setOmega] = useState(2)
-  const [mSlider, setMSlider] = useState(1)
-  const [mRod, setMRod]       = useState(1)
   const [theta, setTheta]     = useState(0)
   const [history, setHistory] = useState([])
   const [isPlaying, setIsPlaying] = useState(false)
@@ -49,7 +47,7 @@ export default function App() {
     return () => cancelAnimationFrame(ref.current)
   }, [isPlaying])
 
-  const state = computeSliderCrank(r, l, omega, theta, mSlider, mRod)
+  const state = computeSliderCrank(r, l, omega, theta, 5, 5)
   const tNorm = ((theta % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)
 
   useEffect(() => {
