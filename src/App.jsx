@@ -12,6 +12,8 @@ export default function App() {
   const [r, setR]         = useState(1)
   const [l, setL]         = useState(2.5)
   const [omega, setOmega] = useState(2)
+  const [mSlider, setMSlider] = useState(1)
+  const [mRod, setMRod]       = useState(1)
   const [theta, setTheta]     = useState(0)
   const [history, setHistory] = useState([])
   const [isPlaying, setIsPlaying] = useState(false)
@@ -47,7 +49,7 @@ export default function App() {
     return () => cancelAnimationFrame(ref.current)
   }, [isPlaying])
 
-  const state = computeSliderCrank(r, l, omega, theta)
+  const state = computeSliderCrank(r, l, omega, theta, mSlider, mRod)
   const tNorm = ((theta % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)
 
   useEffect(() => {
@@ -124,7 +126,7 @@ export default function App() {
         fontSize: "0.78rem", color: "#4a5568",
         borderTop: "1px solid #1a2340",
       }}>
-       Copyright © {new Date().getFullYear()} Raihan_2304058 All Rights Reserved
+        © {new Date().getFullYear()} Raihan_MKB23 — Slider-Crank Educational Simulator
       </footer>
     </div>
   )
