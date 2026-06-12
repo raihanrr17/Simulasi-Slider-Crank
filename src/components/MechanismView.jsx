@@ -38,7 +38,8 @@ function drawArrow(ctx, x1, y1, x2, y2, color, label, labelPos = "end") {
 }
 
 // ── Tabel nilai di 8 posisi sudut kunci ──
-function useTable(r, l, omega, mSlider, mRod) {
+function useTable(r, l, omega) {
+  const mSlider = 5, mRod = 5
   return useMemo(() => {
     const angles = [0, 45, 90, 135, 180, 225, 270, 315]
     return angles.map(deg => {
@@ -46,15 +47,15 @@ function useTable(r, l, omega, mSlider, mRod) {
       const s = computeSliderCrank(r, l, omega, theta, mSlider, mRod)
       return { deg, vC: s.vC, omegaRod: s.omegaRod, Fslider: s.Fslider }
     })
-  }, [r, l, omega, mSlider, mRod])
+  }, [r, l, omega])
 }
 
 const tdS = { padding: "3px 8px", fontSize: "0.73rem", borderBottom: "1px solid #1e2a44", textAlign: "right" }
 const thS = { padding: "4px 8px", fontSize: "0.7rem",  borderBottom: "1px solid #253055", textAlign: "right", color: "#aaa" }
 
-export default function MechanismView({ state, r, l, omega, mSlider = 1, mRod = 1 }) {
+export default function MechanismView({ state, r, l, omega }) {
   const canvasRef = useRef(null)
-  const table     = useTable(r, l, omega, mSlider, mRod)
+  const table     = useTable(r, l, omega)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -195,7 +196,7 @@ export default function MechanismView({ state, r, l, omega, mSlider = 1, mRod = 
         {/* Tabel */}
         <div style={{ flex: 1, overflowX: "auto" }}>
           <p style={{ margin: "0 0 6px", fontSize: "0.75rem", color: "#aaa" }}>
-            Nilai pada posisi sudut kunci (ω={omega} rad/s, mₛ={mSlider} kg)
+            Nilai pada posisi sudut kunci (ω={omega} rad/s, m = 5 kg)
           </p>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
