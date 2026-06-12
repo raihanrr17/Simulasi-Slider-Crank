@@ -1,14 +1,11 @@
-export default function ControlPanel({ r, l, omega, setR, setL, setOmega }) {
-  const invalid = r >= l
+export default function ControlPanel({ r, l, omega, mSlider, mRod, setR, setL, setOmega, setMSlider, setMRod }) {
 
   function handleSetR(val) {
     setR(val)
-    // jika r >= l, paksa l naik jadi r + 0.5
     if (val >= l) setL(parseFloat((val + 0.5).toFixed(1)))
   }
 
   function handleSetL(val) {
-    // jangan biarkan l turun ke <= r
     if (val <= r) return
     setL(val)
   }
@@ -27,28 +24,35 @@ export default function ControlPanel({ r, l, omega, setR, setL, setOmega }) {
         onChange={e => handleSetL(parseFloat(e.target.value))} />
       <p style={{ margin: "0 0 4px", fontSize: "0.85rem", color: "#aaa" }}>l = {l} m</p>
 
-      {/* Peringatan jika hampir melanggar syarat */}
       {(l - r) < 0.6 && (
         <p style={{
-          margin: "0 0 10px", fontSize: "0.75rem",
-          color: "#ffcd56", background: "rgba(255,205,86,0.08)",
-          border: "1px solid rgba(255,205,86,0.3)",
+          margin: "0 0 10px", fontSize: "0.75rem", color: "#ffcd56",
+          background: "rgba(255,205,86,0.08)", border: "1px solid rgba(255,205,86,0.3)",
           borderRadius: 4, padding: "4px 8px",
-        }}>
-          ⚠️ r mendekati l — jaga agar r &lt; l supaya mekanisme valid
-        </p>
+        }}>⚠️ r mendekati l — jaga agar r &lt; l supaya mekanisme valid</p>
       )}
-      {!((l - r) < 0.6) && (
-        <p style={{ margin: "0 0 10px" }} />
-      )}
+      {!((l - r) < 0.6) && <p style={{ margin: "0 0 10px" }} />}
 
       <label>Angular Velocity (ω)</label>
       <input type="range" min="1" max="20" step="1" value={omega}
         onChange={e => setOmega(parseFloat(e.target.value))} />
-      <p style={{ margin: "0 0 4px", fontSize: "0.85rem", color: "#aaa" }}>ω = {omega} rad/s</p>
+      <p style={{ margin: "0 0 12px", fontSize: "0.85rem", color: "#aaa" }}>ω = {omega} rad/s</p>
 
-      <p style={{ margin: "4px 0 0", fontSize: "0.75rem", color: "#4a5568" }}>
-        Syarat: r &lt; l &nbsp;|&nbsp; λ = r/l = {(r/l).toFixed(3)}
+      {/* Massa */}
+      <div style={{ borderTop: "1px solid #1e2d50", paddingTop: 10 }}>
+        <label>Massa Slider (m<sub>s</sub>)</label>
+        <input type="range" min="0.1" max="10" step="0.1" value={mSlider}
+          onChange={e => setMSlider(parseFloat(e.target.value))} />
+        <p style={{ margin: "0 0 10px", fontSize: "0.85rem", color: "#aaa" }}>mₛ = {mSlider} kg</p>
+
+        <label>Massa Rod (m<sub>r</sub>)</label>
+        <input type="range" min="0.1" max="10" step="0.1" value={mRod}
+          onChange={e => setMRod(parseFloat(e.target.value))} />
+        <p style={{ margin: "0 0 4px", fontSize: "0.85rem", color: "#aaa" }}>m_r = {mRod} kg</p>
+      </div>
+
+      <p style={{ margin: "6px 0 0", fontSize: "0.75rem", color: "#4a5568" }}>
+        Syarat: r &lt; l &nbsp;|&nbsp; λ = {(r/l).toFixed(3)}
       </p>
     </div>
   )
