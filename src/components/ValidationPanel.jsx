@@ -12,6 +12,7 @@ export default function ValidationPanel({ r, l, omega, theta }) {
   const omegaRod = (safeR * safeO * cosT) / (safeL * cosPhi || 1)
   const vC       = -safeR * safeO * sinT - safeL * omegaRod * sinPhi
 
+  const xC    = safeR * cosT + Math.sqrt(Math.max(0, safeL ** 2 - safeR ** 2 * sinT ** 2))
   const xExpr = `${safeR} · cos(${tNorm.toFixed(2)}) + √(${safeL}² − ${safeR}² · sin²(${tNorm.toFixed(2)}))`
 
   // ── Definisi semua anotasi: kondisi aktif atau tidak ──
@@ -47,15 +48,56 @@ export default function ValidationPanel({ r, l, omega, theta }) {
       active: Math.abs(tNorm) < 0.08 || Math.abs(tNorm - Math.PI) < 0.08,
       color: "#a3e635",
     },
+    {
+      icon: "⚡",
+      label: "ωrod Ekstrem",
+      desc: "Aktif saat ωrod > 1.5× ω — rod berputar jauh lebih cepat dari crank",
+      activeDesc: `ωrod = ${omegaRod.toFixed(2)} rad/s — jauh melebihi ω crank (${safeO} rad/s)`,
+      active: Math.abs(omegaRod) > Math.abs(safeO) * 1.5,
+      color: "#f0abfc",
+    },
   ]
 
   return (
     <div className="panel" style={{ marginTop: 12 }}>
       <h2>Equation Validation</h2>
 
-      <p style={{ fontFamily: "monospace", fontSize: "0.82rem", color: "#ccc", margin: "0 0 10px" }}>
-        x(θ) = {xExpr}
-      </p>
+      {/* Posisi */}
+      <div style={{ fontFamily: "monospace", fontSize: "0.82rem", margin: "0 0 8px",
+        background: "rgba(255,255,255,0.03)", border: "1px solid #253055",
+        borderRadius: 6, padding: "8px 12px" }}>
+        <div style={{ color: "#666", fontSize: "0.72rem", marginBottom: 2 }}>POSISI SLIDER</div>
+        <div style={{ color: "#aaa", marginBottom: 4, fontSize: "0.8rem" }}>x(θ) = {xExpr}</div>
+        <div style={{ color: "#4bc0c0", fontWeight: "bold", fontSize: "0.95rem" }}>
+          x(θ) = {xC.toFixed(4)} m
+        </div>
+      </div>
+
+      {/* Kecepatan linier */}
+      <div style={{ fontFamily: "monospace", fontSize: "0.82rem", margin: "0 0 8px",
+        background: "rgba(255,255,255,0.03)", border: "1px solid #253055",
+        borderRadius: 6, padding: "8px 12px" }}>
+        <div style={{ color: "#666", fontSize: "0.72rem", marginBottom: 2 }}>KECEPATAN LINIER SLIDER</div>
+        <div style={{ color: "#aaa", marginBottom: 4, fontSize: "0.8rem" }}>
+          vC = −r·ω·sin(θ) − l·ωrod·sin(φ)
+        </div>
+        <div style={{ color: "#ff6384", fontWeight: "bold", fontSize: "0.95rem" }}>
+          vC = {vC.toFixed(4)} m/s
+        </div>
+      </div>
+
+      {/* Kecepatan sudut rod */}
+      <div style={{ fontFamily: "monospace", fontSize: "0.82rem", margin: "0 0 14px",
+        background: "rgba(255,255,255,0.03)", border: "1px solid #253055",
+        borderRadius: 6, padding: "8px 12px" }}>
+        <div style={{ color: "#666", fontSize: "0.72rem", marginBottom: 2 }}>KECEPATAN SUDUT CONNECTING ROD</div>
+        <div style={{ color: "#aaa", marginBottom: 4, fontSize: "0.8rem" }}>
+          ωrod = (r·ω·cos(θ)) / (l·cos(φ))
+        </div>
+        <div style={{ color: "#ffcd56", fontWeight: "bold", fontSize: "0.95rem" }}>
+          ωrod = {omegaRod.toFixed(4)} rad/s
+        </div>
+      </div>
 
       <div style={{ display: "flex", gap: 24, fontSize: "0.83rem", color: "#aaa", marginBottom: 14, flexWrap: "wrap" }}>
         <span>r = <strong style={{ color: "#fff" }}>{safeR} m</strong></span>
