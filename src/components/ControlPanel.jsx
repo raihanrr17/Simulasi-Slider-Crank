@@ -1,4 +1,4 @@
-export default function ControlPanel({ r, l, omega, mSlider, mRod, setR, setL, setOmega, setMSlider, setMRod }) {
+export default function ControlPanel({ r, l, omega, setR, setL, setOmega }) {
 
   function handleSetR(val) {
     setR(val)
@@ -36,23 +36,13 @@ export default function ControlPanel({ r, l, omega, mSlider, mRod, setR, setL, s
       <label>Angular Velocity (ω)</label>
       <input type="range" min="1" max="20" step="1" value={omega}
         onChange={e => setOmega(parseFloat(e.target.value))} />
-      <p style={{ margin: "0 0 12px", fontSize: "0.85rem", color: "#aaa" }}>ω = {omega} rad/s</p>
+      <p style={{ margin: "0 0 10px", fontSize: "0.85rem", color: "#aaa" }}>ω = {omega} rad/s</p>
 
-      {/* Massa */}
-      <div style={{ borderTop: "1px solid #1e2d50", paddingTop: 10 }}>
-        <label>Massa Slider (m<sub>s</sub>)</label>
-        <input type="range" min="0.1" max="10" step="0.1" value={mSlider}
-          onChange={e => setMSlider(parseFloat(e.target.value))} />
-        <p style={{ margin: "0 0 10px", fontSize: "0.85rem", color: "#aaa" }}>mₛ = {mSlider} kg</p>
-
-        <label>Massa Rod (m<sub>r</sub>)</label>
-        <input type="range" min="0.1" max="10" step="0.1" value={mRod}
-          onChange={e => setMRod(parseFloat(e.target.value))} />
-        <p style={{ margin: "0 0 4px", fontSize: "0.85rem", color: "#aaa" }}>m_r = {mRod} kg</p>
-      </div>
-
-      <p style={{ margin: "6px 0 0", fontSize: "0.75rem", color: "#4a5568" }}>
+      <p style={{ margin: "4px 0 0", fontSize: "0.75rem", color: "#4a5568" }}>
         Syarat: r &lt; l &nbsp;|&nbsp; λ = {(r/l).toFixed(3)}
+      </p>
+      <p style={{ margin: "4px 0 0", fontSize: "0.75rem", color: "#4a5568" }}>
+        Massa slider & rod = <strong style={{ color: "#666" }}>5 kg</strong> (tetap)
       </p>
     </div>
   )
