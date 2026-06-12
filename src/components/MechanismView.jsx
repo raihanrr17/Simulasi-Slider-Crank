@@ -1,7 +1,8 @@
 import { useRef, useEffect, useMemo } from "react"
 import { computeSliderCrank } from "../physics/sliderCrankModel"
 
-// ── Helper: gambar panah ──
+const MASS = 5 // kg, tetap
+
 function drawArrow(ctx, x1, y1, x2, y2, color, label, labelPos = "end") {
   const dx  = x2 - x1
   const dy  = y2 - y1
@@ -20,7 +21,6 @@ function drawArrow(ctx, x1, y1, x2, y2, color, label, labelPos = "end") {
   ctx.lineTo(x2, y2)
   ctx.stroke()
 
-  // arrowhead
   ctx.beginPath()
   ctx.moveTo(x2, y2)
   ctx.lineTo(x2 - hl * Math.cos(angle - 0.38), y2 - hl * Math.sin(angle - 0.38))
@@ -37,14 +37,12 @@ function drawArrow(ctx, x1, y1, x2, y2, color, label, labelPos = "end") {
   }
 }
 
-// ── Tabel nilai di 8 posisi sudut kunci ──
 function useTable(r, l, omega) {
-  const mSlider = 5, mRod = 5
   return useMemo(() => {
     const angles = [0, 45, 90, 135, 180, 225, 270, 315]
     return angles.map(deg => {
       const theta = deg * Math.PI / 180
-      const s = computeSliderCrank(r, l, omega, theta, mSlider, mRod)
+      const s = computeSliderCrank(r, l, omega, theta, MASS, MASS)
       return { deg, vC: s.vC, omegaRod: s.omegaRod, Fslider: s.Fslider }
     })
   }, [r, l, omega])
@@ -64,12 +62,11 @@ export default function MechanismView({ state, r, l, omega }) {
     const H = canvas.height
     ctx.clearRect(0, 0, W, H)
 
-    // ── Skala & pivot ──
-    const margin  = 36
-    const scaleX  = (W - margin * 2) / ((r + l) * 2)
-    const scaleY  = (H - margin * 2) / (r * 2)
-    const scale   = Math.min(scaleX, scaleY)
-    const pivot   = { x: W / 2 - (r + l) * scale * 0.15, y: H / 2 }
+    const margin = 36
+    const scaleX = (W - margin * 2) / ((r + l) * 2)
+    const scaleY = (H - margin * 2) / (r * 2)
+    const scale  = Math.min(scaleX, scaleY)
+    const pivot  = { x: W / 2 - (r + l) * scale * 0.15, y: H / 2 }
 
     const A = { x: pivot.x,                        y: pivot.y }
     const B = { x: pivot.x + state.B.x * scale,    y: pivot.y - state.B.y * scale }
@@ -86,7 +83,7 @@ export default function MechanismView({ state, r, l, omega }) {
     ctx.stroke()
     ctx.setLineDash([])
 
-    // Crank A→B
+    // Crank
     ctx.lineWidth   = Math.max(3, scale * 0.08)
     ctx.strokeStyle = "#00e5ff"
     ctx.lineCap     = "round"
@@ -95,7 +92,7 @@ export default function MechanismView({ state, r, l, omega }) {
     ctx.lineTo(B.x, B.y)
     ctx.stroke()
 
-    // Rod B→C
+    // Rod
     ctx.strokeStyle = "#ff6b35"
     ctx.beginPath()
     ctx.moveTo(B.x, B.y)
@@ -104,7 +101,7 @@ export default function MechanismView({ state, r, l, omega }) {
 
     const dotR = Math.max(5, scale * 0.06)
 
-    // Joint A (pivot tetap)
+    // Joint A
     ctx.fillStyle = "#ffffff"
     ctx.beginPath()
     ctx.arc(A.x, A.y, dotR, 0, Math.PI * 2)
@@ -117,7 +114,7 @@ export default function MechanismView({ state, r, l, omega }) {
     ctx.closePath()
     ctx.fill()
 
-    // Joint B (pin)
+    // Joint B
     ctx.fillStyle = "#ffffff"
     ctx.beginPath()
     ctx.arc(B.x, B.y, dotR, 0, Math.PI * 2)
@@ -133,9 +130,9 @@ export default function MechanismView({ state, r, l, omega }) {
     ctx.fill()
     ctx.stroke()
 
-    // ── Vektor kecepatan ──
-    const maxV  = Math.max(Math.hypot(state.vB.x, state.vB.y), Math.abs(state.vC), 0.01)
-    const vSc   = 55 / maxV
+    // Vektor kecepatan
+    const maxV = Math.max(Math.hypot(state.vB.x, state.vB.y), Math.abs(state.vC), 0.01)
+    const vSc  = 55 / maxV
 
     drawArrow(ctx, B.x, B.y,
       B.x + state.vB.x * vSc, B.y - state.vB.y * vSc,
@@ -145,40 +142,36 @@ export default function MechanismView({ state, r, l, omega }) {
       C.x + state.vC * vSc, C.y - sh / 2 - 4,
       "#f0abfc", `vC=${state.vC.toFixed(1)}`)
 
-    // ── Vektor gaya ──
+    // Vektor gaya
     const maxF = Math.max(Math.abs(state.Fslider), state.Frod, state.Fpin, 0.01)
     const fSc  = 45 / maxF
 
-    // Fslider di bawah slider C
     drawArrow(ctx, C.x, C.y + sh / 2 + 4,
       C.x + state.Fslider * fSc, C.y + sh / 2 + 4,
       "#ef4444", `Fs=${state.Fslider.toFixed(1)}N`)
 
-    // Frod di titik tengah rod
     drawArrow(ctx, midRod.x, midRod.y,
       midRod.x + state.FrodX * fSc, midRod.y - state.FrodY * fSc,
       "#22c55e", `Fr=${state.Frod.toFixed(1)}N`, "mid")
 
-    // Fpin di titik B
     drawArrow(ctx, B.x, B.y,
       B.x + state.FpinX * fSc, B.y - state.FpinY * fSc,
       "#fb923c", `Fp=${state.Fpin.toFixed(1)}N`)
 
-    // ── Label sudut & info ──
+    // Labels
     ctx.font      = "10px monospace"
     ctx.fillStyle = "rgba(255,255,255,0.3)"
     ctx.fillText(`r=${r}  l=${l}  λ=${(r/l).toFixed(2)}`, margin, H - 20)
     ctx.fillStyle = "#ffcd56"
     ctx.fillText(`ωrod=${state.omegaRod.toFixed(2)} rad/s`, margin, H - 7)
 
-  }, [state, r, l, mSlider, mRod])
+  }, [state, r, l])
 
   return (
     <div className="panel">
       <h2>Mechanism, Velocity &amp; Force Diagram</h2>
       <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
 
-        {/* Canvas */}
         <div style={{ flex: "0 0 auto" }}>
           <canvas ref={canvasRef} width="290" height="270"
             style={{ background: "#0e1324", borderRadius: 8 }} />
@@ -193,10 +186,9 @@ export default function MechanismView({ state, r, l, omega }) {
           </div>
         </div>
 
-        {/* Tabel */}
         <div style={{ flex: 1, overflowX: "auto" }}>
           <p style={{ margin: "0 0 6px", fontSize: "0.75rem", color: "#aaa" }}>
-            Nilai pada posisi sudut kunci (ω={omega} rad/s, m = 5 kg)
+            Nilai pada posisi sudut kunci (ω={omega} rad/s, m={MASS} kg)
           </p>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
