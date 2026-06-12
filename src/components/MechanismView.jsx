@@ -160,43 +160,29 @@ export default function MechanismView({ state, r, l, omega }) {
         </div>
       </div>
 
-      {/* Baris bawah: nilai real-time + legend */}
+      {/* Legend + nilai real-time digabung */}
       <div style={{
         marginTop: 10, paddingTop: 10,
         borderTop: "1px solid #1e2a44",
-        display: "grid", gridTemplateColumns: "1fr 1fr",
-        gap: 8,
+        display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
+        gap: "6px 12px",
       }}>
-        {/* Nilai real-time */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <p style={{ margin: "0 0 4px", fontSize: "0.68rem", color: "#4a5568", textTransform: "uppercase", letterSpacing: "0.06em" }}>Nilai saat ini</p>
-          {[
-            { color: "#a3e635", label: "vB",   value: `${vBmag.toFixed(3)} m/s` },
-            { color: "#f0abfc", label: "vC",   value: `${state.vC.toFixed(3)} m/s` },
-            { color: "#ffcd56", label: "ωrod", value: `${state.omegaRod.toFixed(3)} rad/s` },
-            { color: "#ef4444", label: "Fs",   value: `${state.Fslider.toFixed(2)} N` },
-            { color: "#22c55e", label: "Fr",   value: `${state.Frod.toFixed(2)} N` },
-            { color: "#fb923c", label: "Fp",   value: `${state.Fpin.toFixed(2)} N` },
-          ].map(({ color, label, value }) => (
-            <div key={label} style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem" }}>
-              <span style={{ color: "#6b7a99" }}>{label}</span>
-              <span style={{ color, fontFamily: "monospace", fontWeight: "bold" }}>{value}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Legend — grid 4 kolom */}
-        <div>
-          <p style={{ margin: "0 0 4px", fontSize: "0.68rem", color: "#4a5568", textTransform: "uppercase", letterSpacing: "0.06em" }}>Keterangan</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "4px 12px" }}>
-            {LEGEND.map(({ color, label }) => (
-              <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0 }} />
-                <span style={{ fontSize: "0.74rem", color: "#9aa5be" }}>{label}</span>
-              </div>
-            ))}
+        {[
+          { color: "#00e5ff", label: "Crank",     value: null },
+          { color: "#ff6b35", label: "Rod/Slider", value: null },
+          { color: "#a3e635", label: "vB",         value: `${vBmag.toFixed(2)} m/s` },
+          { color: "#f0abfc", label: "vC",         value: `${state.vC.toFixed(2)} m/s` },
+          { color: "#ef4444", label: "F slider",   value: `${state.Fslider.toFixed(1)} N` },
+          { color: "#22c55e", label: "F rod",      value: `${state.Frod.toFixed(1)} N` },
+          { color: "#fb923c", label: "F pin B",    value: `${state.Fpin.toFixed(1)} N` },
+          { color: "#ffcd56", label: "ωrod",       value: `${state.omegaRod.toFixed(2)} r/s` },
+        ].map(({ color, label, value }) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0 }} />
+            <span style={{ fontSize: "0.72rem", color: "#9aa5be" }}>{label}</span>
+            {value && <span style={{ fontSize: "0.72rem", color, fontFamily: "monospace", fontWeight: "bold", marginLeft: 2 }}>= {value}</span>}
           </div>
-        </div>
+        ))}
       </div>
     </div>
   )
