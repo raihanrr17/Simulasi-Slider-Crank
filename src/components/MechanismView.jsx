@@ -185,15 +185,17 @@ export default function MechanismView({ state, r, l, omega }) {
           ))}
         </div>
 
-        {/* Legend */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        {/* Legend — grid 4 kolom */}
+        <div>
           <p style={{ margin: "0 0 4px", fontSize: "0.68rem", color: "#4a5568", textTransform: "uppercase", letterSpacing: "0.06em" }}>Keterangan</p>
-          {LEGEND.map(({ color, label }) => (
-            <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0 }} />
-              <span style={{ fontSize: "0.75rem", color: "#9aa5be" }}>{label}</span>
-            </div>
-          ))}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "4px 12px" }}>
+            {LEGEND.map(({ color, label }) => (
+              <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0 }} />
+                <span style={{ fontSize: "0.74rem", color: "#9aa5be" }}>{label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
