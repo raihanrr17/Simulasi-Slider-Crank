@@ -25,7 +25,7 @@ export const C = {
   danger:  "#DC267F",   // magenta
   success: "#009E73",   // teal
   muted:   "#FFFFFF",   // putih
-  dimmed:  "#4a5568",
+  dimmed:  "#FFFAFA",
 
   // Background/border (tidak perlu colorblind-safe)
   bg:      "#131a2e",
