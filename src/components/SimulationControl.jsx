@@ -14,10 +14,10 @@ export default function SimulationControls({ play, pause, step, reset, isPlaying
     <div className="panel">
       <h2>Simulation Control</h2>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 12 }}>
-        <button style={btnStyle(C.frod)}    onClick={play}>▶ Play</button>
-        <button style={btnStyle(C.omegrod)} onClick={pause}>⏸ Pause</button>
-        <button style={btnStyle(C.crank)}   onClick={step}>⏭ Step</button>
-        <button style={btnStyle(C.danger)}  onClick={reset}>⏹ Reset</button>
+        <button style={btnStyle(C.frod)}    onClick={play}>Play</button>
+        <button style={btnStyle(C.omegrod)} onClick={pause}>Pause</button>
+        <button style={btnStyle(C.crank)}   onClick={step}>Step</button>
+        <button style={btnStyle(C.danger)}  onClick={reset}>Reset</button>
       </div>
 
       <div style={{ opacity: isPlaying ? 0.35 : 1, transition: "opacity 0.2s" }}>
