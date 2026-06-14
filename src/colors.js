@@ -24,7 +24,7 @@ export const C = {
   warn:    "#FFB000",   // amber
   danger:  "#DC267F",   // magenta
   success: "#009E73",   // teal
-  muted:   "#9aa5be",   // abu-abu biru
+  muted:   "#FFFFFF",   // putih
   dimmed:  "#4a5568",
 
   // Background/border (tidak perlu colorblind-safe)
