@@ -1,7 +1,24 @@
+/* ── Token warna global (mirror dari colors.js) ── */
+:root {
+  --c-crank:    #648FFF;
+  --c-rod:      #FE6100;
+  --c-vb:       #D4E600;
+  --c-vc:       #785EF0;
+  --c-omegrod:  #FFB000;
+  --c-fslider:  #DC267F;
+  --c-frod:     #009E73;
+  --c-warn:     #FFB000;
+  --c-success:  #009E73;
+  --c-danger:   #DC267F;
+  --c-bg:       #131a2e;
+  --c-bgdark:   #0b0f1c;
+  --c-border:   #253055;
+}
+
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: #0b0f1c;
+  background: var(--c-bgdark);
   color: white;
 }
 
@@ -12,7 +29,6 @@ body {
   padding: 0 16px 16px;
 }
 
-
 .bottom-row {
   padding: 0 16px 24px;
 }
@@ -22,19 +38,16 @@ body {
   overflow-y: auto;
 }
 
-/* ── Panel umum ── */
 .panel {
-  background: #131a2e;
-  border: 1px solid #253055;
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-h2 {
-  margin-top: 0;
-}
+h2 { margin-top: 0; }
 
 canvas {
   background: #0e1324;
@@ -43,5 +56,11 @@ canvas {
 
 input[type=range] {
   width: 100%;
-  margin-bottom: 14px;
+  margin-bottom: 4px;
+  accent-color: var(--c-crank);
 }
+
+button {
+  transition: opacity 0.15s;
+}
+button:hover { opacity: 0.85; }
