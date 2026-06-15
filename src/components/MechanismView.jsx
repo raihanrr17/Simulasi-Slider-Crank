@@ -119,7 +119,7 @@ export default function MechanismView({ state, r, l, omega }) {
 
   return (
     <div className="panel">
-      <h2>Visualization & Data</h2>
+      <h2>Animation & Data</h2>
 
       <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
         <canvas ref={canvasRef} width="270" height="240"
